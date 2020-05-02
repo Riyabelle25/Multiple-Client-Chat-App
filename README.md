@@ -1,6 +1,6 @@
 # Multiple-Client-Chat-App
 
-I have first implemented one-to-one Chat Application in the branch chat.
+# I have first implemented one-to-one Chat Application in the branch chat.
 
 To check it out,
 
@@ -19,6 +19,7 @@ To check it out,
  ./client.o
  
  
- Multi-Client Server system has been implemented as a ChatRoom feature in branch chat room.
+ 
+ # Multi-Client Server system has been implemented as a ChatRoom feature in branch chat room.
  
  To check it out, follow its README :)
