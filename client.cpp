@@ -6,8 +6,30 @@
 #include <netinet/in.h>
 #include <string.h>
 #define PORT 8000 
+#define MAX 80
+
+void chat(int sockfd) 
+{ 
+    char buff[MAX]; 
+    int n; 
+    for (;;) { 
+        bzero(buff, sizeof(buff)); 
+        printf("Enter the string : "); 
+        n = 0; 
+        while ((buff[n++] = getchar()) != '\n') 
+            ; 
+        write(sockfd, buff, sizeof(buff)); 
+        bzero(buff, sizeof(buff)); 
+        read(sockfd, buff, sizeof(buff)); 
+        printf("From Server : %s", buff); 
+        if ((strncmp(buff, "exit", 4)) == 0) { 
+            printf("Client Exit...\n"); 
+            break; 
+        } 
+    } 
+} 
    
-int main(int argc, char const *argv[]) 
+int main() 
 { 
     struct sockaddr_in address; 
     int sock = 0, valread; 
@@ -37,8 +59,11 @@ int main(int argc, char const *argv[])
         printf("\nConnection Failed \n"); 
         return -1; 
     } 
-    send(sock , hello , strlen(hello) , 0 ); 
-    valread = read( sock , buffer, 1024); 
-    printf("%s\n",buffer ); 
+   // function for chat 
+    chat(sock); 
+
+    // close the socket 
+    close(sock); 
+
     return 0; 
-} 
+}
