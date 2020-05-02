@@ -5,25 +5,38 @@
 #include <netinet/in.h>
 #include <string.h>
 #define PORT 8000
+#define MAX 80
 
-char *server_message = 
-"HTTP/1.1 200 OK \n\
-\n\
-<html>\n\
-<head>\n\
-	<title>Title: Bare Socket</title>\n\
-<head>\n\
-<body>\n\
-	<center>\n\
-		<h1>\n\
-			Hello from server!\n\
-		</h1>\n\
-	</center>\n\
-</body>\n\
-</html>";
+void chat(int sockfd) 
+{ 
+    char buff[MAX]; 
+    int n; 
+    // infinite loop for chat 
+    for (;;) { 
+        bzero(buff, MAX); 
 
+        // read the message from client and copy it in buffer 
+        read(sockfd, buff, sizeof(buff)); 
+        // print buffer which contains the client contents 
+        printf("From client: %s\t To client : ", buff); 
+        bzero(buff, MAX); 
+        n = 0; 
+        // copy server message in the buffer 
+        while ((buff[n++] = getchar()) != '\n') 
+            ; 
 
-int main(int argc, char const *argv[]) {
+        // and send that buffer to client 
+        write(sockfd, buff, sizeof(buff)); 
+
+        // if msg contains "Exit" then server exit and chat ended. 
+        if (strncmp("exit", buff, 4) == 0) { 
+            printf("Server Exit...\n"); 
+            break; 
+        } 
+    } 
+} 
+
+int main() {
     int server_fd, new_socket, valread;
     struct sockaddr_in address;
     int opt = 1;
@@ -60,10 +73,9 @@ int main(int argc, char const *argv[]) {
 	        perror("accept");
 	        exit(EXIT_FAILURE);
 	    }
-	    valread = read( new_socket , buffer, 1024);
-	    printf("%s\n",buffer );
-	    send(new_socket , server_message , strlen(server_message) , 0 );
-	    close(new_socket);
+
+        chat(new_socket); 
+        close(server_fd);
 	}
     return 0;
 }
