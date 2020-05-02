@@ -4,6 +4,7 @@
 run these commands to compile-
 
  g++ -o server.o chatRoom.cpp
+ 
  ./server.o
  
  Ta-da the server is up and running!!
